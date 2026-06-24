@@ -1,7 +1,10 @@
 import 'package:expense_tracker/app/app_routes.dart';
 import 'package:expense_tracker/core/constants/routes_name.dart';
+import 'package:expense_tracker/core/di/dependency_injection.dart';
 import 'package:expense_tracker/core/theme/app_theme.dart';
+import 'package:expense_tracker/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class App extends StatelessWidget {
@@ -11,11 +14,17 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: Size(375, 812),
-      builder: (context, child) => MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        onGenerateRoute: AppRoutes.getRoute,
-        initialRoute: RoutesName.login,
+      builder: (context, child) => MultiBlocProvider(
+        
+        providers: [
+          BlocProvider(create: (context) => getIt<AuthBloc>(),),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme,
+          onGenerateRoute: AppRoutes.getRoute,
+          initialRoute: RoutesName.login,
+        ),
       ),
     );
   }
