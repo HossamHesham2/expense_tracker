@@ -1,0 +1,37 @@
+class SvgsName {
+  static const String add = "assets/svgs/add.svg";
+  static const String apple = "assets/svgs/apple.svg";
+  static const String arrowDown = "assets/svgs/arrow-down.svg";
+  static const String arrowUp = "assets/svgs/arrow-up.svg";
+  static const String barChart = "assets/svgs/bar-chart.svg";
+  static const String bill = "assets/svgs/bill.svg";
+  static const String bookHalf = "assets/svgs/book-half.svg";
+  static const String googleAnalytics =
+      "assets/svgs/brand-google-analytics.svg";
+  static const String calendarDate = "assets/svgs/calendar-date.svg";
+  static const String carFront = "assets/svgs/car-front.svg";
+  static const String cart = "assets/svgs/cart.svg";
+  static const String chevronLeft = "assets/svgs/chevron-left.svg";
+  static const String dollar = "assets/svgs/dollar.svg";
+  static const String dotsHorizontal = "assets/svgs/dots-horizontal.svg";
+  static const String eye = "assets/svgs/eye.svg";
+  static const String eyeClosed = "assets/svgs/eye-closed.svg";
+  static const String fastFoodOutline = "assets/svgs/fast-food-outline.svg";
+  static const String filter = "assets/svgs/filter.svg";
+  static const String heart = "assets/svgs/heart.svg";
+  static const String homeSimpleDoor = "assets/svgs/home-simple-door.svg";
+  static const String layoutGrid = "assets/svgs/layout-grid.svg";
+  static const String lock = "assets/svgs/lock.svg";
+  static const String mail = "assets/svgs/mail.svg";
+  static const String menuOutline = "assets/svgs/menu-outline.svg";
+  static const String notificationsOutline =
+      "assets/svgs/notifications-outline.svg";
+  static const String pencil = "assets/svgs/pencil.svg";
+  static const String play = "assets/svgs/play.svg";
+  static const String plusCircle = "assets/svgs/plus-circle.svg";
+  static const String searchSharp = "assets/svgs/search-sharp.svg";
+  static const String shoppingBag = "assets/svgs/shopping-bag.svg";
+  static const String trash = "assets/svgs/trash.svg";
+  static const String user = "assets/svgs/user.svg";
+  static const String google = "assets/svgs/google.svg";
+}
