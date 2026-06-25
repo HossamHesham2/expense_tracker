@@ -79,7 +79,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           );
           Navigator.pushNamedAndRemoveUntil(
             context,
-            RoutesName.home,
+            RoutesName.mainLayout,
             (route) => false,
           );
         }

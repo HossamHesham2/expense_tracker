@@ -54,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
           );
           Navigator.pushNamedAndRemoveUntil(
             context,
-            RoutesName.home,
+            RoutesName.mainLayout,
             (route) => false,
           );
         }
@@ -68,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
           );
           Navigator.pushNamedAndRemoveUntil(
             context,
-            RoutesName.home,
+            RoutesName.mainLayout,
             (route) => false,
           );
         }
