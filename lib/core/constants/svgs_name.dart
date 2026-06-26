@@ -9,6 +9,7 @@ class SvgsName {
   static const String googleAnalytics =
       "assets/svgs/brand-google-analytics.svg";
   static const String calendarDate = "assets/svgs/calendar-date.svg";
+  static const String coffee = "assets/svgs/coffee.svg";
   static const String carFront = "assets/svgs/car-front.svg";
   static const String cart = "assets/svgs/cart.svg";
   static const String chevronLeft = "assets/svgs/chevron-left.svg";

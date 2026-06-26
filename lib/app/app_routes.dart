@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/routes_name.dart';
+import 'package:expense_tracker/features/add_transactions/presentation/pages/add_transaction_screen.dart';
 import 'package:expense_tracker/features/analytics/presentation/pages/analytics_screen.dart';
 import 'package:expense_tracker/features/auth/presentation/pages/login_screen.dart';
 import 'package:expense_tracker/features/auth/presentation/pages/register_screen.dart';
@@ -22,6 +23,8 @@ class AppRoutes {
         return CupertinoPageRoute(builder: (context) => HomeScreen());
       case RoutesName.transactions:
         return CupertinoPageRoute(builder: (context) => TransactionsScreen());
+      case RoutesName.addTransaction:
+        return CupertinoPageRoute(builder: (context) => AddTransactionScreen());
       case RoutesName.analytics:
         return CupertinoPageRoute(builder: (context) => AnalyticsScreen());
       case RoutesName.profile:

@@ -15,6 +15,16 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:google_sign_in/google_sign_in.dart' as _i116;
 import 'package:injectable/injectable.dart' as _i526;
 
+import '../../features/add_transactions/data/repository/add_transaction_repo_impl.dart'
+    as _i709;
+import '../../features/add_transactions/data/request/add_transaction_remote.dart'
+    as _i42;
+import '../../features/add_transactions/data/request/add_transaction_remote_impl.dart'
+    as _i639;
+import '../../features/add_transactions/domain/repository/add_transaction_repo.dart'
+    as _i140;
+import '../../features/add_transactions/domain/usecases/add_transaction_use_case.dart'
+    as _i273;
 import '../../features/auth/data/repository/auth_repo_impl.dart' as _i751;
 import '../../features/auth/data/request/remote/auth_remote.dart' as _i68;
 import '../../features/auth/data/request/remote/auth_remote_impl.dart' as _i188;
@@ -42,7 +52,16 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i974.FirebaseFirestore>(
       () => firebaseModule.firebaseFirestore,
     );
+    gh.factory<_i140.AddTransactionRepo>(() => _i709.AddTransactionRepoImpl());
+    gh.factory<_i42.AddTransactionRemote>(
+      () => _i639.AddTransactionRemoteImpl(),
+    );
     gh.factory<_i533.AuthRepository>(() => _i442.AuthRepositoryImpl());
+    gh.factory<_i273.AddTransactionUseCase>(
+      () => _i273.AddTransactionUseCase(
+        addTransactionRepo: gh<_i140.AddTransactionRepo>(),
+      ),
+    );
     gh.factory<_i68.AuthRemote>(
       () => _i188.AuthRemoteImpl(
         firebaseAuth: gh<_i59.FirebaseAuth>(),

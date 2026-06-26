@@ -110,6 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         CustomIcon(
                           containerColor: AppColors.green16A3,
                           svgsName: SvgsName.barChart,
+                          label: "",
                         ),
                         SizedBox(height: 20.h),
                         Text(
