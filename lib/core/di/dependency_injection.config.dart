@@ -25,6 +25,8 @@ import '../../features/add_transactions/domain/repository/add_transaction_repo.d
     as _i140;
 import '../../features/add_transactions/domain/usecases/add_transaction_use_case.dart'
     as _i273;
+import '../../features/add_transactions/presentation/bloc/add_transaction_bloc.dart'
+    as _i828;
 import '../../features/auth/data/repository/auth_repo_impl.dart' as _i751;
 import '../../features/auth/data/request/remote/auth_remote.dart' as _i68;
 import '../../features/auth/data/request/remote/auth_remote_impl.dart' as _i188;
@@ -52,16 +54,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i974.FirebaseFirestore>(
       () => firebaseModule.firebaseFirestore,
     );
-    gh.factory<_i140.AddTransactionRepo>(() => _i709.AddTransactionRepoImpl());
-    gh.factory<_i42.AddTransactionRemote>(
-      () => _i639.AddTransactionRemoteImpl(),
-    );
     gh.factory<_i533.AuthRepository>(() => _i442.AuthRepositoryImpl());
-    gh.factory<_i273.AddTransactionUseCase>(
-      () => _i273.AddTransactionUseCase(
-        addTransactionRepo: gh<_i140.AddTransactionRepo>(),
-      ),
-    );
     gh.factory<_i68.AuthRemote>(
       () => _i188.AuthRemoteImpl(
         firebaseAuth: gh<_i59.FirebaseAuth>(),
@@ -87,11 +80,32 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i97.RegisterUseCase>(
       () => _i97.RegisterUseCase(authRepo: gh<_i976.AuthRepo>()),
     );
+    gh.factory<_i42.AddTransactionRemote>(
+      () => _i639.AddTransactionRemoteImpl(
+        firebaseAuth: gh<_i59.FirebaseAuth>(),
+        firebaseFirestore: gh<_i974.FirebaseFirestore>(),
+      ),
+    );
+    gh.factory<_i140.AddTransactionRepo>(
+      () => _i709.AddTransactionRepoImpl(
+        addTransactionRemote: gh<_i42.AddTransactionRemote>(),
+      ),
+    );
+    gh.factory<_i273.AddTransactionUseCase>(
+      () => _i273.AddTransactionUseCase(
+        addTransactionRepo: gh<_i140.AddTransactionRepo>(),
+      ),
+    );
     gh.factory<_i797.AuthBloc>(
       () => _i797.AuthBloc(
         loginUseCase: gh<_i37.LoginUseCase>(),
         loginWithGoogleUseCase: gh<_i151.LoginWithGoogleUseCase>(),
         registerUseCase: gh<_i97.RegisterUseCase>(),
+      ),
+    );
+    gh.factory<_i828.AddTransactionBloc>(
+      () => _i828.AddTransactionBloc(
+        addTransactionUseCase: gh<_i273.AddTransactionUseCase>(),
       ),
     );
     return this;

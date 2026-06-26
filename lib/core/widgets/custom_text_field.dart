@@ -4,9 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class CustomTextField extends StatelessWidget {
   final String label;
   final String hintText;
-  final Widget prefix;
+  final Widget? prefix;
   final Widget? suffix;
   final bool obscureText;
+  final TextAlign? textAlign;
   final TextInputType? keyboardType;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
@@ -17,10 +18,11 @@ class CustomTextField extends StatelessWidget {
     required this.hintText,
     this.suffix,
     this.validator,
+    this.textAlign,
     this.keyboardType,
     this.controller,
     this.obscureText = false,
-    required this.prefix,
+    this.prefix,
   });
 
   @override
@@ -36,6 +38,7 @@ class CustomTextField extends StatelessWidget {
           controller: controller,
           keyboardType: keyboardType,
           autocorrect: true,
+          textAlign: textAlign ?? TextAlign.start,
           decoration: InputDecoration(
             prefixIcon: prefix,
             suffixIcon: suffix,

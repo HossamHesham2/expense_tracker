@@ -23,94 +23,121 @@ class _HomeScreenState extends State<HomeScreen> {
     final user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          SvgPicture.asset(SvgsName.notificationsOutline),
-          SizedBox(width: 20.w),
-        ],
-        leadingWidth: 60.w,
-      ),
-      drawer: Drawer(),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: ListTile(
-                      title: Text(
-                        "Good morning 👋",
-                        style: context.headlineLarge.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.gray6B72,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SvgPicture.asset(SvgsName.menuOutline),
+                    SvgPicture.asset(SvgsName.notificationsOutline),
+                  ],
+                ),
+                SizedBox(height: 20.h),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ListTile(
+                        title: Text(
+                          "Good morning 👋",
+                          style: context.headlineLarge.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.gray6B72,
+                          ),
+                        ),
+                        subtitle: Text(
+                          user?.displayName ?? "Guest",
+                          style: context.headlineSmall.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                      subtitle: Text(
-                        user?.displayName ?? "Guest",
-                        style: context.headlineSmall.copyWith(
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: AppColors.emerald10B9,
+                        borderRadius: BorderRadius.circular(200.r),
+                      ),
+                      child: SvgPicture.asset(
+                        SvgsName.user,
+                        width: 30.w,
+                        color: AppColors.whiteFFFF,
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                  ],
+                ),
+                SizedBox(height: 20.h),
+                BalanceCard(
+                  balance: 2000,
+                  income: 122222,
+                  expense: 20000,
+                  isVisible: isVisible,
+                  onToggleVisibility: () {
+                    setState(() {
+                      isVisible = !isVisible;
+                    });
+                  },
+                ),
+                SizedBox(height: 20.h),
+                Text(
+                  "Quick Actions",
+                  style: context.titleLarge.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 20.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    CustomIcon(
+                      svgsName: SvgsName.arrowUp,
+                      containerColor: AppColors.green16A3,
+                      label: "Income",
+                    ),
+                    CustomIcon(
+                      svgsName: SvgsName.arrowDown,
+                      containerColor: AppColors.redEF44,
+                      label: "Expense",
+                    ),
+                    CustomIcon(
+                      svgsName: SvgsName.menuOutline,
+                      containerColor: AppColors.grayE5E7,
+                      iconColor: AppColors.dark1118,
+                      label: "View all",
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Recent Transactions",
+                      style: context.titleLarge.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        "See all",
+                        style: context.labelLarge.copyWith(
+                          color: AppColors.grayE5E7,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: AppColors.emerald10B9,
-                      borderRadius: BorderRadius.circular(200.r),
-                    ),
-                    child: SvgPicture.asset(
-                      SvgsName.user,
-                      width: 30.w,
-                      color: AppColors.whiteFFFF,
-                    ),
-                  ),
-                  SizedBox(width: 20),
-                ],
-              ),
-              SizedBox(height: 20.h),
-              BalanceCard(
-                balance: 2000,
-                income: 122222,
-                expense: 20000,
-                isVisible: isVisible,
-                onToggleVisibility: () {
-                  setState(() {
-                    isVisible = !isVisible;
-                  });
-                },
-              ),
-              SizedBox(height: 20.h),
-              Text(
-                "Quick Actions",
-                style: context.titleLarge.copyWith(fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 20.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  CustomIcon(
-                    svgsName: SvgsName.arrowUp,
-                    containerColor: AppColors.green16A3,
-                    label: "Income",
-                  ),
-                  CustomIcon(
-                    svgsName: SvgsName.arrowDown,
-                    containerColor: AppColors.redEF44,
-                    label: "Expense",
-                  ),
-                  CustomIcon(
-                    svgsName: SvgsName.menuOutline,
-                    containerColor: AppColors.grayE5E7,
-                    iconColor: AppColors.dark1118,
-                    label: "View all",
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+                SizedBox(height: 20.h),
+              ],
+            ),
           ),
         ),
       ),

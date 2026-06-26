@@ -17,24 +17,24 @@ enum AccountType {
 
 @JsonSerializable(explicitToJson: true)
 class TransactionModel {
-  final String id;
-  final String title;
-  final double amount;
-  final String category;
-  final TransactionType type;
-  final DateTime date;
-  final AccountType account;
+  final String? id;
+  final String? title;
+  final double? amount;
+  final String? category;
+  final TransactionType? transactionType;
+  final DateTime? date;
+  final AccountType? accountType;
   final String? note;
-  final String userId;
+  final String? userId;
 
   TransactionModel({
     required this.id,
     required this.title,
     required this.amount,
     required this.category,
-    required this.type,
+    required this.transactionType,
     required this.date,
-    required this.account,
+    required this.accountType,
     this.note,
     required this.userId,
   });

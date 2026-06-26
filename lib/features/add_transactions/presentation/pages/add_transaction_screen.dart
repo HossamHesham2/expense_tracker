@@ -1,7 +1,14 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:expense_tracker/core/constants/routes_name.dart';
 import 'package:expense_tracker/core/models/transaction_model.dart';
+import 'package:expense_tracker/core/utils/app_validators.dart';
+import 'package:expense_tracker/core/widgets/custom_snack_bar.dart';
+import 'package:expense_tracker/core/widgets/custom_text_field.dart';
 import 'package:expense_tracker/core/widgets/primary_button.dart';
 import 'package:expense_tracker/features/add_transactions/data/model/category_item_model.dart';
+import 'package:expense_tracker/features/add_transactions/presentation/bloc/add_transaction_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:expense_tracker/core/utils/app_colors.dart';
@@ -19,10 +26,18 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   TransactionType _type = TransactionType.expense;
   int _selectedCategory = 0;
   final TextEditingController _noteController = TextEditingController();
-  DateTime _selectedDate = DateTime(2024, 5, 15);
-  String _selectedAccount = 'Cash';
-
+  final TextEditingController _amountController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  DateTime _selectedDate = DateTime.now();
+  AccountType _accountType = AccountType.cash;
+  var autoValidateMode = AutovalidateMode.disabled;
   final List<CategoryItemModel> _categories = [
+    CategoryItemModel(
+      svgName: SvgsName.dollar,
+      label: 'Salary',
+      bgColor: const Color(0xFFE3F2FD),
+      iconColor: const Color(0xFF1976D2),
+    ),
     CategoryItemModel(
       svgName: SvgsName.fastFoodOutline,
       label: 'Food',
@@ -47,12 +62,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       bgColor: const Color(0xFFE8EAF6),
       iconColor: const Color(0xFF5C6BC0),
     ),
-    CategoryItemModel(
-      svgName: SvgsName.coffee,
-      label: 'Coffee',
-      bgColor: const Color(0xFFE3F2FD),
-      iconColor: const Color(0xFF1976D2),
-    ),
+
     CategoryItemModel(
       svgName: SvgsName.heart,
       label: 'Health',
@@ -76,6 +86,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   @override
   void dispose() {
     _noteController.dispose();
+    _amountController.dispose();
     super.dispose();
   }
 
@@ -83,49 +94,113 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: FocusScope.of(context).unfocus,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          centerTitle: true,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-            onPressed: () => Navigator.pop(context),
-          ),
-          title: Text('Add Transaction', style: context.titleMedium),
-        ),
-        body: SingleChildScrollView(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 12.h),
-              _buildToggle(),
-              SizedBox(height: 20.h),
-              _buildAmountDisplay(),
-              SizedBox(height: 20.h),
-              Text('Select Category', style: context.labelLarge),
-              SizedBox(height: 12.h),
-              _buildCategories(),
-              SizedBox(height: 20.h),
-              _buildFieldLabel('Date'),
-              SizedBox(height: 6.h),
-              _buildDateField(),
-              SizedBox(height: 14.h),
-              _buildFieldLabel('Account'),
-              SizedBox(height: 6.h),
-              _buildAccountField(),
-              SizedBox(height: 14.h),
-              _buildFieldLabel('Add Note (Optional)'),
-              SizedBox(height: 6.h),
-              _buildNoteField(),
-              SizedBox(height: 28.h),
-              PrimaryButton(text: "Save Transaction", onTap: () {}),
-              SizedBox(height: 20.h),
-            ],
-          ),
-        ),
+      child: BlocConsumer<AddTransactionBloc, AddTransactionState>(
+        listener: (context, state) {
+          if (state.addTransactionRequest == AddTransactionRequest.success) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              CustomSnackBar(
+                title: 'Success',
+                message: 'Added successfully',
+                contentType: ContentType.success,
+              ).snackBar,
+            );
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              RoutesName.mainLayout,
+              (route) => false,
+            );
+          }
+          if (state.addTransactionFailure == AddTransactionRequest.error) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              CustomSnackBar(
+                title: 'Error',
+                message: state.addTransactionFailure!.errMessage,
+                contentType: ContentType.success,
+              ).snackBar,
+            );
+          }
+        },
+        builder: (context, state) {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              elevation: 0,
+              centerTitle: true,
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+                onPressed: () => Navigator.pop(context),
+              ),
+              title: Text('Add Transaction', style: context.titleMedium),
+            ),
+            body: SingleChildScrollView(
+              padding: EdgeInsets.all(20),
+              child: Form(
+                key: formKey,
+                autovalidateMode: autoValidateMode,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 12.h),
+                    _buildToggle(),
+                    SizedBox(height: 20.h),
+                    _buildAmountDisplay(),
+                    SizedBox(height: 20.h),
+                    Text('Select Category', style: context.labelLarge),
+                    SizedBox(height: 12.h),
+                    _buildCategories(),
+                    SizedBox(height: 20.h),
+                    _buildFieldLabel('Date'),
+                    SizedBox(height: 6.h),
+                    _buildDateField(),
+                    SizedBox(height: 14.h),
+                    _buildFieldLabel('Account'),
+                    SizedBox(height: 6.h),
+                    _buildAccountField(),
+                    SizedBox(height: 14.h),
+                    _buildFieldLabel('Add Note (Optional)'),
+                    SizedBox(height: 6.h),
+                    _buildNoteField(),
+                    SizedBox(height: 28.h),
+                    state.addTransactionRequest == AddTransactionRequest.loading
+                        ? Center(child: CircularProgressIndicator(color: AppColors.green16A3))
+                        : PrimaryButton(
+                            text: "Save Transaction",
+                            onTap: () {
+                              final isValid = formKey.currentState!.validate();
+
+                              if (!isValid) {
+                                setState(() {
+                                  autoValidateMode =
+                                      AutovalidateMode.onUserInteraction;
+                                });
+                                return;
+                              }
+                              context.read<AddTransactionBloc>().add(
+                                SaveTransactionEvent(
+                                  title: _categories[_selectedCategory].label,
+                                  amount:
+                                      double.tryParse(
+                                        _amountController.text.trim(),
+                                      ) ??
+                                      0.0,
+                                  category:
+                                      _categories[_selectedCategory].label,
+                                  transactionType: _type,
+                                  accountType: _accountType,
+                                  date: _selectedDate,
+                                  note: _noteController.text.trim(),
+                                ),
+                              );
+                            },
+                          ),
+                    SizedBox(height: 20.h),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -139,11 +214,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       ),
       child: Row(
         children: [
-          _toggleBtn(
-            'Expense',
-            TransactionType.expense,
-            AppColors.redEF44,
-          ),
+          _toggleBtn('Expense', TransactionType.expense, AppColors.redEF44),
           _toggleBtn('Income', TransactionType.income, AppColors.green16A3),
         ],
       ),
@@ -176,14 +247,13 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   }
 
   Widget _buildAmountDisplay() {
-    return Center(
-      child: Text(
-        '0.00 EG',
-        style: context.displayMedium.copyWith(
-          fontWeight: FontWeight.w700,
-          letterSpacing: -1,
-        ),
-      ),
+    return CustomTextField(
+      label: '',
+      hintText: '0.00 EG',
+      controller: _amountController,
+      textAlign: TextAlign.center,
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      validator: (p0) => AppValidators.amount(p0),
     );
   }
 
@@ -252,7 +322,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         final picked = await showDatePicker(
           context: context,
           initialDate: _selectedDate,
-          firstDate: DateTime(2020),
+          firstDate: DateTime.now(),
           lastDate: DateTime(2030),
         );
         if (picked != null) setState(() => _selectedDate = picked);
@@ -277,10 +347,21 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   }
 
   Widget _buildAccountField() {
+    String getAccountName(AccountType type) {
+      switch (type) {
+        case AccountType.cash:
+          return 'Cash';
+        case AccountType.bankAccount:
+          return 'Bank Account';
+        case AccountType.debitCard:
+          return 'Debit Card';
+      }
+    }
+
     return _fieldContainer(
       child: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          value: _selectedAccount,
+        child: DropdownButton<AccountType>(
+          value: _accountType,
           isExpanded: true,
           icon: Icon(
             Icons.keyboard_arrow_down,
@@ -288,12 +369,19 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
             size: 20.sp,
           ),
           style: context.bodyMedium,
-          items: [
-            'Cash',
-            'Bank',
-            'Card',
-          ].map((a) => DropdownMenuItem(value: a, child: Text(a))).toList(),
-          onChanged: (v) => setState(() => _selectedAccount = v!),
+          items: AccountType.values.map((account) {
+            return DropdownMenuItem<AccountType>(
+              value: account,
+              child: Text(getAccountName(account)),
+            );
+          }).toList(),
+          onChanged: (value) {
+            if (value != null) {
+              setState(() {
+                _accountType = value;
+              });
+            }
+          },
         ),
       ),
     );
