@@ -63,7 +63,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             CustomSnackBar(
               title: 'Error',
-              message: state.registerFailure!.message,
+              message: state.registerFailure!.errMessage,
               contentType: ContentType.failure,
             ).snackBar,
           );
@@ -87,7 +87,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             CustomSnackBar(
               title: 'Error',
-              message: state.loginWithGoogleFailure!.message,
+              message: state.loginWithGoogleFailure!.errMessage,
               contentType: ContentType.failure,
             ).snackBar,
           );

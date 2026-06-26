@@ -33,7 +33,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           result.fold(
             (l) => emit(
               state.copyWith(
-                loginFailure: ServerFailure(l.message),
+                loginFailure: ServerFailure(errMessage : l.errMessage),
                 loginRequest: AuthRequest.error,
               ),
             ),
@@ -49,7 +49,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           result.fold(
             (l) => emit(
               state.copyWith(
-                loginWithGoogleFailure: ServerFailure(l.message),
+                loginWithGoogleFailure: ServerFailure(errMessage : l.errMessage),
                 loginWithGoogleRequest: AuthRequest.error,
               ),
             ),
@@ -72,7 +72,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           result.fold(
             (l) => emit(
               state.copyWith(
-                registerFailure: ServerFailure(l.message),
+                registerFailure: ServerFailure(errMessage : l.errMessage),
                 registerRequest: AuthRequest.error,
               ),
             ),

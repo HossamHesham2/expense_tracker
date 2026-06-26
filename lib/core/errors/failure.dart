@@ -1,13 +1,8 @@
-sealed class Failure {
-  final String message;
-
-  Failure(this.message);
+abstract class Failure {
+  final String errMessage;
+  Failure({required this.errMessage});
 }
-
 class ServerFailure extends Failure {
-  ServerFailure(super.message);
-}
+  ServerFailure({required super.errMessage});
 
-class LocalFailure extends Failure {
-  LocalFailure(super.message);
 }

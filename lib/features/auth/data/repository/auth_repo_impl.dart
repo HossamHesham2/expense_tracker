@@ -21,7 +21,7 @@ class AuthRepoImpl extends AuthRepo {
       final result = await authRemote.login(email: email, password: password);
       return Right(result);
     } on RemoteException catch (e) {
-      return Left(ServerFailure(e.message));
+      return Left(ServerFailure(errMessage:e.message));
     }
   }
 
@@ -31,7 +31,7 @@ class AuthRepoImpl extends AuthRepo {
       final result = await authRemote.loginWithGoogle();
       return Right(result);
     } on RemoteException catch (e) {
-      return Left(ServerFailure(e.message));
+      return Left(ServerFailure(errMessage:e.message));
     }
   }
 
@@ -49,7 +49,7 @@ class AuthRepoImpl extends AuthRepo {
       );
       return Right(result);
     } on RemoteException catch (e) {
-      return Left(ServerFailure(e.message));
+      return Left(ServerFailure(errMessage:e.message));
     }
   }
 }

@@ -76,17 +76,17 @@ class _LoginScreenState extends State<LoginScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             CustomSnackBar(
               title: 'Error',
-              message: state.loginFailure!.message,
+              message: state.loginFailure!.errMessage,
               contentType: ContentType.failure,
             ).snackBar,
           );
         }
         if (state.loginWithGoogleRequest == AuthRequest.error) {
-          print("Google Error : ${state.loginWithGoogleFailure!.message}");
+          print("Google Error : ${state.loginWithGoogleFailure!.errMessage}");
           ScaffoldMessenger.of(context).showSnackBar(
             CustomSnackBar(
               title: 'Error',
-              message: state.loginWithGoogleFailure!.message,
+              message: state.loginWithGoogleFailure!.errMessage,
               contentType: ContentType.failure,
             ).snackBar,
           );

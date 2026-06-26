@@ -8,10 +8,19 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
 
-    final signInMethod = user?.providerData.isNotEmpty == true
-        ? user!.providerData.first.providerId
-        : 'Unknown';
-
-    return Scaffold(body: Center(child: Text(signInMethod)));
+    return Scaffold(
+      body: Column(
+        children: [
+          Row(
+            children: [
+              ListTile(
+                title: Text("Good morning 👋"),
+                subtitle: Text(user?.displayName ?? "Guest"),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
