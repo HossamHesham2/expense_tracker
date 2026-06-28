@@ -6,6 +6,7 @@ import 'package:expense_tracker/core/helpers/helpers.dart';
 import 'package:expense_tracker/core/theme/app_theme.dart';
 import 'package:expense_tracker/features/add_transactions/presentation/bloc/add_transaction_bloc.dart';
 import 'package:expense_tracker/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:expense_tracker/features/transactions/presentation/bloc/transactions_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,6 +25,7 @@ class App extends StatelessWidget {
         providers: [
           BlocProvider(create: (context) => getIt<AuthBloc>()),
           BlocProvider(create: (context) => getIt<AddTransactionBloc>()),
+          BlocProvider(create: (context) => getIt<TransactionsBloc>()),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

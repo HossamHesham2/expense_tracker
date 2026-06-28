@@ -1,10 +1,13 @@
 import 'package:expense_tracker/core/constants/svgs_name.dart';
 import 'package:expense_tracker/core/extensions/text_extension.dart';
+import 'package:expense_tracker/core/models/transaction_model.dart';
 import 'package:expense_tracker/core/utils/app_colors.dart';
-import 'package:expense_tracker/core/widgets/custom_icon.dart';
+import 'package:expense_tracker/core/widgets/transaction_card.dart';
 import 'package:expense_tracker/features/home/presentation/widget/balance_card.dart';
+import 'package:expense_tracker/features/transactions/presentation/bloc/transactions_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -19,128 +22,173 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isVisible = false;
 
   @override
+  void initState() {
+    context.read<TransactionsBloc>().add(GetAllTransactionsEvent());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
 
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return BlocBuilder<TransactionsBloc, TransactionsState>(
+      builder: (context, state) {
+        final transactions = state.transactions;
+
+        double income = 0;
+        double expense = 0;
+
+        for (final transaction in transactions) {
+          if (transaction.transactionType == TransactionType.income) {
+            income += transaction.amount ?? 0;
+          } else {
+            expense += transaction.amount ?? 0;
+          }
+        }
+
+        final balance = income - expense;
+        String svgName(String category) {
+          switch (category.trim().toLowerCase()) {
+            case 'salary':
+              return SvgsName.dollar;
+
+            case 'food':
+              return SvgsName.fastFoodOutline;
+
+            case 'transport':
+              return SvgsName.carFront;
+
+            case 'shopping':
+              return SvgsName.shoppingBag;
+
+            case 'bills':
+              return SvgsName.bill;
+
+            case 'health':
+              return SvgsName.heart;
+
+            case 'education':
+              return SvgsName.bookHalf;
+
+            case 'other':
+              return SvgsName.dotsHorizontal;
+
+            default:
+              return SvgsName.add;
+          }
+        }
+
+        return Scaffold(
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SvgPicture.asset(SvgsName.menuOutline),
-                    SvgPicture.asset(SvgsName.notificationsOutline),
-                  ],
-                ),
-                SizedBox(height: 20.h),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ListTile(
-                        title: Text(
-                          "Good morning 👋",
-                          style: context.headlineLarge.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.gray6B72,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SvgPicture.asset(SvgsName.menuOutline),
+                        SvgPicture.asset(SvgsName.notificationsOutline),
+                      ],
+                    ),
+                    SizedBox(height: 20.h),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ListTile(
+                            title: Text(
+                              "Good morning 👋",
+                              style: context.headlineLarge.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.gray6B72,
+                              ),
+                            ),
+                            subtitle: Text(
+                              user?.displayName ?? "Guest",
+                              style: context.headlineSmall.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
-                        subtitle: Text(
-                          user?.displayName ?? "Guest",
-                          style: context.headlineSmall.copyWith(
+                        Container(
+                          padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: AppColors.emerald10B9,
+                            borderRadius: BorderRadius.circular(200.r),
+                          ),
+                          child: SvgPicture.asset(
+                            SvgsName.user,
+                            width: 30.w,
+                            color: AppColors.whiteFFFF,
+                          ),
+                        ),
+                        SizedBox(width: 20),
+                      ],
+                    ),
+                    SizedBox(height: 20.h),
+                    BalanceCard(
+                      balance: balance,
+                      income: income,
+                      expense: expense,
+                      isVisible: isVisible,
+                      onToggleVisibility: () {
+                        setState(() {
+                          isVisible = !isVisible;
+                        });
+                      },
+                    ),
+                    SizedBox(height: 20.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Recent Transactions",
+                          style: context.titleLarge.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: AppColors.emerald10B9,
-                        borderRadius: BorderRadius.circular(200.r),
-                      ),
-                      child: SvgPicture.asset(
-                        SvgsName.user,
-                        width: 30.w,
-                        color: AppColors.whiteFFFF,
-                      ),
-                    ),
-                    SizedBox(width: 20),
-                  ],
-                ),
-                SizedBox(height: 20.h),
-                BalanceCard(
-                  balance: 2000,
-                  income: 122222,
-                  expense: 20000,
-                  isVisible: isVisible,
-                  onToggleVisibility: () {
-                    setState(() {
-                      isVisible = !isVisible;
-                    });
-                  },
-                ),
-                SizedBox(height: 20.h),
-                Text(
-                  "Quick Actions",
-                  style: context.titleLarge.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 20.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    CustomIcon(
-                      svgsName: SvgsName.arrowUp,
-                      containerColor: AppColors.green16A3,
-                      label: "Income",
-                    ),
-                    CustomIcon(
-                      svgsName: SvgsName.arrowDown,
-                      containerColor: AppColors.redEF44,
-                      label: "Expense",
-                    ),
-                    CustomIcon(
-                      svgsName: SvgsName.menuOutline,
-                      containerColor: AppColors.grayE5E7,
-                      iconColor: AppColors.dark1118,
-                      label: "View all",
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Recent Transactions",
-                      style: context.titleLarge.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        "See all",
-                        style: context.labelLarge.copyWith(
-                          color: AppColors.grayE5E7,
-                          fontWeight: FontWeight.bold,
+                        TextButton(
+                          onPressed: () {},
+                          child: Text(
+                            "See all",
+                            style: context.labelLarge.copyWith(
+                              color: AppColors.grayE5E7,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
+                    SizedBox(height: 20.h),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: state.transactions.length > 5
+                          ? 5
+                          : state.transactions.length,
+                      itemBuilder: (context, index) {
+                        final transaction = state.transactions[index];
+                        return TransactionCard(
+                          title: transaction.title,
+                          category: transaction.category,
+                          amount: transaction.amount,
+                          date: transaction.date,
+                          type: transaction.transactionType,
+                          svgIcon: svgName(transaction.category ?? ""),
+                        );
+                      },
+                    ),
+
                   ],
                 ),
-                SizedBox(height: 20.h),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

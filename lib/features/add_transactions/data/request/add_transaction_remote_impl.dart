@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart' show FirebaseFirestore;
+import 'package:expense_tracker/core/constants/app_constant.dart';
 import 'package:expense_tracker/core/errors/app_exceptions.dart';
 import 'package:expense_tracker/core/models/transaction_model.dart';
 import 'package:expense_tracker/features/add_transactions/data/request/add_transaction_remote.dart';
@@ -36,9 +37,9 @@ class AddTransactionRemoteImpl extends AddTransactionRemote {
       final userId = user.uid;
 
       final docRef = firebaseFirestore
-          .collection('users')
+          .collection(AppConstant.usersCollection)
           .doc(userId)
-          .collection('transactions')
+          .collection(AppConstant.transactionsCollection)
           .doc();
       final transactionModel = TransactionModel(
         id: docRef.id,
@@ -50,6 +51,7 @@ class AddTransactionRemoteImpl extends AddTransactionRemote {
         date: date,
         accountType: accountType,
         userId: userId,
+        createdAt: DateTime.now()
       );
 
       await docRef.set(transactionModel.toJson());

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expense_tracker/core/constants/app_constant.dart';
 import 'package:expense_tracker/core/errors/app_exceptions.dart';
 import 'package:expense_tracker/features/auth/data/model/user_model.dart';
 import 'package:expense_tracker/features/auth/data/request/remote/auth_remote.dart';
@@ -31,7 +32,7 @@ class AuthRemoteImpl extends AuthRemote {
         throw RemoteException(message: 'User not found');
       }
       final doc = await firebaseFirestore
-          .collection('users')
+          .collection(AppConstant.usersCollection)
           .doc(firebaseUser.uid)
           .get();
       if (!doc.exists || doc.data() == null) {
@@ -75,7 +76,7 @@ class AuthRemoteImpl extends AuthRemote {
           userCredential.additionalUserInfo?.isNewUser ?? false;
 
       final userDoc = firebaseFirestore
-          .collection('users')
+          .collection(AppConstant.usersCollection)
           .doc(firebaseUser.uid);
 
       if (isRegister) {
@@ -142,7 +143,7 @@ class AuthRemoteImpl extends AuthRemote {
       );
 
       await firebaseFirestore
-          .collection('users')
+          .collection(AppConstant.usersCollection)
           .doc(firebaseUser.uid)
           .set(user.toJson());
 

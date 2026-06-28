@@ -23,6 +23,7 @@ class TransactionModel {
   final String? category;
   final TransactionType? transactionType;
   final DateTime? date;
+  final DateTime? createdAt;
   final AccountType? accountType;
   final String? note;
   final String? userId;
@@ -34,6 +35,7 @@ class TransactionModel {
     required this.category,
     required this.transactionType,
     required this.date,
+    required this.createdAt,
     required this.accountType,
     this.note,
     required this.userId,

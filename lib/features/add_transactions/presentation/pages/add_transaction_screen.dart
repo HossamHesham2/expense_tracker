@@ -45,7 +45,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       iconColor: const Color(0xFFE74C3C),
     ),
     CategoryItemModel(
-      svgName: SvgsName.cart,
+      svgName: SvgsName.carFront,
       label: 'Transport',
       bgColor: const Color(0xFFFFF3E0),
       iconColor: const Color(0xFFF39C12),
@@ -163,7 +163,11 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                     _buildNoteField(),
                     SizedBox(height: 28.h),
                     state.addTransactionRequest == AddTransactionRequest.loading
-                        ? Center(child: CircularProgressIndicator(color: AppColors.green16A3))
+                        ? Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.green16A3,
+                            ),
+                          )
                         : PrimaryButton(
                             text: "Save Transaction",
                             onTap: () {
@@ -322,8 +326,8 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         final picked = await showDatePicker(
           context: context,
           initialDate: _selectedDate,
-          firstDate: DateTime.now(),
-          lastDate: DateTime(2030),
+          firstDate: DateTime(2025),
+          lastDate: DateTime.now(),
         );
         if (picked != null) setState(() => _selectedDate = picked);
       },

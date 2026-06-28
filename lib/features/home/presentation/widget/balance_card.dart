@@ -49,7 +49,7 @@ class BalanceCard extends StatelessWidget {
               Text(
                 'Current Balance',
                 style: TextStyle(
-                  color: AppColors.whiteFFFF.withOpacity(0.85),
+                  color: AppColors.whiteFFFF.withValues(alpha: 0.85),
                   fontSize: 14.sp,
                 ),
               ),
@@ -74,7 +74,7 @@ class BalanceCard extends StatelessWidget {
             ),
           ),
           SizedBox(height: 18.h),
-          Divider(color: AppColors.whiteFFFF.withOpacity(0.25), thickness: 1),
+          Divider(color: AppColors.whiteFFFF.withValues(alpha: 0.25), thickness: 1),
           SizedBox(height: 14.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -82,7 +82,7 @@ class BalanceCard extends StatelessWidget {
               _StatItem(
                 label: 'Income',
                 amount: '${_format(income)} EG',
-                labelColor: AppColors.whiteFFFF.withOpacity(0.8),
+                labelColor: AppColors.whiteFFFF.withValues(alpha: 0.8),
                 amountColor: AppColors.whiteFFFF,
                 isVisible: isVisible,
               ),
