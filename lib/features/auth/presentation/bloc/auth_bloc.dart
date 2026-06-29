@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/errors/failure.dart';
 import 'package:expense_tracker/features/auth/data/model/user_model.dart';
 import 'package:expense_tracker/features/auth/domain/usecases/login_use_case.dart';
 import 'package:expense_tracker/features/auth/domain/usecases/login_with_google_use_case.dart';
+import 'package:expense_tracker/features/auth/domain/usecases/logout_use_case.dart';
 import 'package:expense_tracker/features/auth/domain/usecases/register_use_case.dart';
 import 'package:injectable/injectable.dart';
 
@@ -16,11 +17,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LoginUseCase loginUseCase;
   final RegisterUseCase registerUseCase;
   final LoginWithGoogleUseCase loginWithGoogleUseCase;
+  final LogoutUseCase logoutUseCase;
 
   AuthBloc({
     required this.loginUseCase,
     required this.loginWithGoogleUseCase,
     required this.registerUseCase,
+    required this.logoutUseCase,
   }) : super(AuthState.initial()) {
     on<AuthEvent>((event, emit) async {
       switch (event) {
@@ -33,7 +36,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           result.fold(
             (l) => emit(
               state.copyWith(
-                loginFailure: ServerFailure(errMessage : l.errMessage),
+                loginFailure: ServerFailure(errMessage: l.errMessage),
                 loginRequest: AuthRequest.error,
               ),
             ),
@@ -49,7 +52,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           result.fold(
             (l) => emit(
               state.copyWith(
-                loginWithGoogleFailure: ServerFailure(errMessage : l.errMessage),
+                loginWithGoogleFailure: ServerFailure(errMessage: l.errMessage),
                 loginWithGoogleRequest: AuthRequest.error,
               ),
             ),
@@ -72,7 +75,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           result.fold(
             (l) => emit(
               state.copyWith(
-                registerFailure: ServerFailure(errMessage : l.errMessage),
+                registerFailure: ServerFailure(errMessage: l.errMessage),
                 registerRequest: AuthRequest.error,
               ),
             ),
@@ -85,7 +88,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           );
           break;
         case LogOutEvent():
-          emit(AuthState.initial());
+          emit(state.copyWith(logoutRequest: AuthRequest.loading));
+          final result = await logoutUseCase.call();
+          result.fold(
+            (l) => emit(
+              state.copyWith(
+                logoutRequest: AuthRequest.error,
+                logoutFailure: l,
+              ),
+            ),
+            (r) => emit(state.copyWith(logoutRequest: AuthRequest.success)),
+          );
           break;
       }
     });

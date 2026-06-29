@@ -152,4 +152,14 @@ class AuthRemoteImpl extends AuthRemote {
       throw RemoteException(message: e.message ?? 'Sign up failed');
     }
   }
+
+  @override
+  Future<bool> logout() async {
+    try {
+      await firebaseAuth.signOut();
+      return true ;
+    } on FirebaseAuthException catch (e) {
+      throw RemoteException(message: e.message ?? 'Log Out failed');
+    }
+  }
 }

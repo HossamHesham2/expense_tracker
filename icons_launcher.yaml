@@ -1,0 +1,13 @@
+icons_launcher:
+  platforms:
+    android:
+      enable: true
+      image_path: "assets/images/icon.png"
+      notification_image: "assets/images/logo.png"
+      # adaptive_background_color: "#ffffff"
+
+    ios:
+      enable: true
+      image_path: "assets/images/logo.png"
+      # For iOS 18+ (support dark and tinted)
+

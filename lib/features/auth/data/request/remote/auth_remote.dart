@@ -6,4 +6,5 @@ abstract class AuthRemote {
   Future<UserModel> register({required String fullName,required String email,required String password});
 
   Future<UserModel> loginWithGoogle();
+  Future<bool> logout();
 }

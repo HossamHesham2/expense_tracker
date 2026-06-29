@@ -10,6 +10,9 @@ class AuthState extends Equatable {
   final AuthRequest? registerRequest;
   final Failure? registerFailure;
 
+  final AuthRequest? logoutRequest;
+  final Failure? logoutFailure;
+
   final UserModel? userModel;
 
   const AuthState({
@@ -17,6 +20,8 @@ class AuthState extends Equatable {
     this.loginFailure,
     this.loginWithGoogleRequest,
     this.loginWithGoogleFailure,
+    this.logoutRequest,
+    this.logoutFailure,
     this.registerRequest,
     this.registerFailure,
     this.userModel,
@@ -27,9 +32,12 @@ class AuthState extends Equatable {
       loginRequest: AuthRequest.initial,
       loginWithGoogleRequest: AuthRequest.initial,
       registerRequest: AuthRequest.initial,
+      logoutRequest: AuthRequest.initial,
       loginFailure: null,
       loginWithGoogleFailure: null,
       registerFailure: null,
+      logoutFailure: null,
+      userModel: null,
     );
   }
 
@@ -41,6 +49,8 @@ class AuthState extends Equatable {
     AuthRequest? registerRequest,
     Failure? registerFailure,
     UserModel? userModel,
+    AuthRequest? logoutRequest,
+    Failure? logoutFailure,
   }) {
     return AuthState(
       loginRequest: loginRequest ?? this.loginRequest,
@@ -49,6 +59,8 @@ class AuthState extends Equatable {
           loginWithGoogleRequest ?? this.loginWithGoogleRequest,
       loginWithGoogleFailure:
           loginWithGoogleFailure ?? this.loginWithGoogleFailure,
+      logoutRequest: loginRequest ?? this.logoutRequest,
+      logoutFailure: loginFailure ?? this.logoutFailure,
       registerRequest: registerRequest ?? this.registerRequest,
       registerFailure: registerFailure ?? this.registerFailure,
       userModel: userModel ?? this.userModel,

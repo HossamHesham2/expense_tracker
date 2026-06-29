@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/constants/routes_name.dart';
 import 'package:expense_tracker/core/constants/svgs_name.dart';
 import 'package:expense_tracker/core/extensions/text_extension.dart';
 import 'package:expense_tracker/core/models/transaction_model.dart';
@@ -249,6 +250,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               date: transaction.date,
               type: transaction.transactionType,
               svgIcon: svgName(transaction.category ?? ""),
+              onTap: () => Navigator.pushNamed(context, RoutesName.transactionDetails,arguments: transaction),
+
             ),
 
             SizedBox(height: 12.h),

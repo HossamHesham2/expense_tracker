@@ -13,6 +13,7 @@ class SvgsName {
   static const String carFront = "assets/svgs/car-front.svg";
   static const String cart = "assets/svgs/cart.svg";
   static const String chevronLeft = "assets/svgs/chevron-left.svg";
+  static const String chevronRight = "assets/svgs/chevron-right.svg";
   static const String dollar = "assets/svgs/dollar.svg";
   static const String dotsHorizontal = "assets/svgs/dots-horizontal.svg";
   static const String eye = "assets/svgs/eye.svg";
@@ -21,18 +22,24 @@ class SvgsName {
   static const String filter = "assets/svgs/filter.svg";
   static const String heart = "assets/svgs/heart.svg";
   static const String homeSimpleDoor = "assets/svgs/home-simple-door.svg";
+  static const String info = "assets/svgs/info.svg";
   static const String layoutGrid = "assets/svgs/layout-grid.svg";
   static const String lock = "assets/svgs/lock.svg";
+  static const String logout = "assets/svgs/logout.svg";
   static const String mail = "assets/svgs/mail.svg";
   static const String menuOutline = "assets/svgs/menu-outline.svg";
+  static const String moneySquare= "assets/svgs/money-square.svg";
   static const String notificationsOutline =
       "assets/svgs/notifications-outline.svg";
   static const String pencil = "assets/svgs/pencil.svg";
   static const String play = "assets/svgs/play.svg";
   static const String plusCircle = "assets/svgs/plus-circle.svg";
+  static const String question = "assets/svgs/question.svg";
   static const String searchSharp = "assets/svgs/search-sharp.svg";
   static const String shoppingBag = "assets/svgs/shopping-bag.svg";
+  static const String settings = "assets/svgs/settings.svg";
   static const String trash = "assets/svgs/trash.svg";
   static const String user = "assets/svgs/user.svg";
+  static const String users = "assets/svgs/users.svg";
   static const String google = "assets/svgs/google.svg";
 }

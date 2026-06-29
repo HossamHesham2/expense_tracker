@@ -33,6 +33,7 @@ import '../../features/auth/domain/repository/auth_repo.dart' as _i976;
 import '../../features/auth/domain/usecases/login_use_case.dart' as _i37;
 import '../../features/auth/domain/usecases/login_with_google_use_case.dart'
     as _i151;
+import '../../features/auth/domain/usecases/logout_use_case.dart' as _i711;
 import '../../features/auth/domain/usecases/register_use_case.dart' as _i97;
 import '../../features/auth/presentation/bloc/auth_bloc.dart' as _i797;
 import '../../features/transactions/data/request/transactions_remote.dart'
@@ -76,6 +77,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i151.LoginWithGoogleUseCase>(
       () => _i151.LoginWithGoogleUseCase(authRepo: gh<_i976.AuthRepo>()),
     );
+    gh.factory<_i711.LogoutUseCase>(
+      () => _i711.LogoutUseCase(authRepo: gh<_i976.AuthRepo>()),
+    );
     gh.factory<_i97.RegisterUseCase>(
       () => _i97.RegisterUseCase(authRepo: gh<_i976.AuthRepo>()),
     );
@@ -111,6 +115,7 @@ extension GetItInjectableX on _i174.GetIt {
         loginUseCase: gh<_i37.LoginUseCase>(),
         loginWithGoogleUseCase: gh<_i151.LoginWithGoogleUseCase>(),
         registerUseCase: gh<_i97.RegisterUseCase>(),
+        logoutUseCase: gh<_i711.LogoutUseCase>(),
       ),
     );
     gh.factory<_i828.AddTransactionBloc>(
