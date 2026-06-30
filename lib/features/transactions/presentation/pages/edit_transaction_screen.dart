@@ -1,12 +1,11 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:expense_tracker/core/constants/routes_name.dart';
 import 'package:expense_tracker/core/models/transaction_model.dart';
 import 'package:expense_tracker/core/utils/app_validators.dart';
 import 'package:expense_tracker/core/widgets/custom_snack_bar.dart';
 import 'package:expense_tracker/core/widgets/custom_text_field.dart';
 import 'package:expense_tracker/core/widgets/primary_button.dart';
 import 'package:expense_tracker/features/add_transactions/data/model/category_item_model.dart';
-import 'package:expense_tracker/features/add_transactions/presentation/bloc/add_transaction_bloc.dart';
+import 'package:expense_tracker/features/transactions/presentation/bloc/transactions_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,14 +14,14 @@ import 'package:expense_tracker/core/utils/app_colors.dart';
 import 'package:expense_tracker/core/extensions/text_extension.dart';
 import 'package:expense_tracker/core/constants/svgs_name.dart';
 
-class AddTransactionScreen extends StatefulWidget {
-  const AddTransactionScreen({super.key});
+class EditTransactionScreen extends StatefulWidget {
+  const EditTransactionScreen({super.key});
 
   @override
-  State<AddTransactionScreen> createState() => _AddTransactionScreenState();
+  State<EditTransactionScreen> createState() => _EditTransactionScreenState();
 }
 
-class _AddTransactionScreenState extends State<AddTransactionScreen> {
+class _EditTransactionScreenState extends State<EditTransactionScreen> {
   TransactionType _type = TransactionType.expense;
   int _selectedCategory = 0;
   final TextEditingController _noteController = TextEditingController();
@@ -31,6 +30,8 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   DateTime _selectedDate = DateTime.now();
   AccountType _accountType = AccountType.cash;
   var autoValidateMode = AutovalidateMode.disabled;
+  late TransactionModel transaction;
+  bool _initialized = false;
   final List<CategoryItemModel> _categories = [
     CategoryItemModel(
       svgName: SvgsName.dollar,
@@ -62,7 +63,6 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       bgColor: const Color(0xFFE8EAF6),
       iconColor: const Color(0xFF5C6BC0),
     ),
-
     CategoryItemModel(
       svgName: SvgsName.heart,
       label: 'Health',
@@ -84,6 +84,29 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   ];
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_initialized) return;
+    _initialized = true;
+    transaction =
+        ModalRoute.of(context)!.settings.arguments as TransactionModel;
+
+    _type = transaction.transactionType!;
+    _amountController.text = transaction.amount.toString();
+    _noteController.text = transaction.note ?? "";
+    _selectedDate = transaction.date!;
+    _accountType = transaction.accountType!;
+
+    _selectedCategory = _categories.indexWhere(
+      (e) => e.label == transaction.category,
+    );
+
+    if (_selectedCategory == -1) {
+      _selectedCategory = 0;
+    }
+  }
+
+  @override
   void dispose() {
     _noteController.dispose();
     _amountController.dispose();
@@ -94,27 +117,28 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: FocusScope.of(context).unfocus,
-      child: BlocConsumer<AddTransactionBloc, AddTransactionState>(
+      child: BlocConsumer<TransactionsBloc, TransactionsState>(
+        listenWhen: (previous, current) =>
+            previous.editTransactionsRequest != current.editTransactionsRequest,
+
         listener: (context, state) {
-          if (state.addTransactionRequest == AddTransactionRequest.success) {
+          if (state.editTransactionsRequest == TransactionsRequest.success) {
             ScaffoldMessenger.of(context).showSnackBar(
               CustomSnackBar(
                 title: 'Success',
-                message: 'Added successfully',
+                message: 'Edit successfully',
                 contentType: ContentType.success,
               ).snackBar,
             );
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              RoutesName.mainLayout,
-              (route) => false,
-            );
+
+            Navigator.pop(context, state.transactionModel);
           }
-          if (state.addTransactionFailure == AddTransactionRequest.error) {
+
+          if (state.editTransactionsRequest == TransactionsRequest.error) {
             ScaffoldMessenger.of(context).showSnackBar(
               CustomSnackBar(
                 title: 'Error',
-                message: state.addTransactionFailure!.errMessage,
+                message: state.editTransactionsFailure!.errMessage,
                 contentType: ContentType.failure,
               ).snackBar,
             );
@@ -131,7 +155,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                 icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
                 onPressed: () => Navigator.pop(context),
               ),
-              title: Text('Add Transaction', style: context.titleMedium),
+              title: Text('Edit Transaction', style: context.titleMedium),
             ),
             body: SingleChildScrollView(
               padding: EdgeInsets.all(20),
@@ -162,14 +186,14 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                     SizedBox(height: 6.h),
                     _buildNoteField(),
                     SizedBox(height: 28.h),
-                    state.addTransactionRequest == AddTransactionRequest.loading
+                    state.editTransactionsRequest == TransactionsRequest.loading
                         ? Center(
                             child: CircularProgressIndicator(
                               color: AppColors.green16A3,
                             ),
                           )
                         : PrimaryButton(
-                            text: "Save Transaction",
+                            text: "Edit Transaction",
                             onTap: () {
                               final isValid = formKey.currentState!.validate();
 
@@ -180,14 +204,17 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                                 });
                                 return;
                               }
-                              context.read<AddTransactionBloc>().add(
-                                SaveTransactionEvent(
+                              print(_categories[_selectedCategory].label);
+                              print(_amountController.text);
+                              print(_type);
+                              print(_selectedCategory);
+                              context.read<TransactionsBloc>().add(
+                                EditTransactionEvent(
+                                  id: transaction.id!,
                                   title: _categories[_selectedCategory].label,
-                                  amount:
-                                      double.tryParse(
-                                        _amountController.text.trim(),
-                                      ) ??
-                                      0.0,
+                                  amount: double.parse(
+                                    _amountController.text.trim(),
+                                  ),
                                   category:
                                       _categories[_selectedCategory].label,
                                   transactionType: _type,
@@ -253,7 +280,6 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   Widget _buildAmountDisplay() {
     return CustomTextField(
       label: '',
-      hintText: '0.00 EG',
       controller: _amountController,
       textAlign: TextAlign.center,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),

@@ -2,15 +2,19 @@ part of 'transactions_bloc.dart';
 
 class TransactionsState extends Equatable {
   final TransactionsRequest? transactionsRequest;
+  final TransactionsRequest? editTransactionsRequest;
 
   final Failure? transactionsFailure;
+  final Failure? editTransactionsFailure;
 
   final TransactionModel? transactionModel;
   final List<TransactionModel> transactions;
 
   const TransactionsState({
     required this.transactionsRequest,
+    required this.editTransactionsRequest,
     required this.transactionsFailure,
+    required this.editTransactionsFailure,
     required this.transactionModel,
     required this.transactions,
   });
@@ -21,6 +25,8 @@ class TransactionsState extends Equatable {
       transactionsFailure: null,
       transactionsRequest: TransactionsRequest.init,
       transactions: const [],
+      editTransactionsFailure: null,
+      editTransactionsRequest: TransactionsRequest.init,
     );
   }
 
@@ -29,10 +35,16 @@ class TransactionsState extends Equatable {
     Failure? transactionsFailure,
     List<TransactionModel>? transactions,
     TransactionModel? transactionModel,
+    TransactionsRequest? editTransactionsRequest,
+    Failure? editTransactionsFailure,
   }) {
     return TransactionsState(
       transactionsRequest: transactionsRequest ?? this.transactionsRequest,
+      editTransactionsRequest:
+          editTransactionsRequest ?? this.editTransactionsRequest,
       transactionsFailure: transactionsFailure ?? this.transactionsFailure,
+      editTransactionsFailure:
+          editTransactionsFailure ?? this.editTransactionsFailure,
       transactions: transactions ?? this.transactions,
       transactionModel: transactionModel ?? this.transactionModel,
     );
@@ -44,6 +56,8 @@ class TransactionsState extends Equatable {
     transactionsFailure,
     transactionModel,
     transactions,
+    editTransactionsRequest,
+    editTransactionsFailure,
   ];
 }
 

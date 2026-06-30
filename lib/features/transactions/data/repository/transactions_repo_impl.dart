@@ -20,4 +20,32 @@ class TransactionsRepoImpl extends TransactionsRepo {
       throw Left(ServerFailure(errMessage: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, TransactionModel>> editTransaction({
+    required String id,
+    required String title,
+    required double amount,
+    required String category,
+    required TransactionType transactionType,
+    required AccountType accountType,
+    required DateTime date,
+    required String? note,
+  }) async {
+    try {
+      final result = await transactionsRemote.editTransaction(
+        id: id,
+        title: title,
+        amount: amount,
+        category: category,
+        transactionType: transactionType,
+        accountType: accountType,
+        date: date,
+        note: note,
+      );
+      return Right(result);
+    } catch (e) {
+      throw Left(ServerFailure(errMessage: e.toString()));
+    }
+  }
 }

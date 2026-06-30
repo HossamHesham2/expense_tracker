@@ -33,7 +33,61 @@ class TransactionsRemoteImpl extends TransactionsRemote {
       final transactions = docRef.docs
           .map((doc) => TransactionModel.fromJson(doc.data()))
           .toList();
+      print("Get User: ${user.uid}");
+
+      for (final doc in docRef.docs) {
+        print("Doc ID: ${doc.id}");
+        print(doc.data());
+      }
       return transactions;
+    } catch (e) {
+      throw RemoteException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<TransactionModel> editTransaction({
+    required String id,
+    required String title,
+    required double amount,
+    required String category,
+    required TransactionType transactionType,
+    required AccountType accountType,
+    required DateTime date,
+    required String? note,
+  }) async {
+    try {
+      final user = firebaseAuth.currentUser;
+
+      if (user == null) {
+        throw RemoteException(message: 'User not authenticated');
+      }
+
+      final userId = user.uid;
+
+      final docRef = firebaseFirestore
+          .collection(AppConstant.usersCollection)
+          .doc(userId)
+          .collection(AppConstant.transactionsCollection)
+          .doc(id);
+      print("Edit User: $userId");
+      print("Edit Doc: $id");
+      final transactionModel = TransactionModel(
+        id: id,
+        title: title,
+        amount: amount,
+        category: category,
+        note: note,
+        transactionType: transactionType,
+        date: date,
+        accountType: accountType,
+        userId: userId,
+        createdAt: date,
+      );
+
+      await docRef.update(transactionModel.toJson());
+
+      return transactionModel;
     } catch (e) {
       throw RemoteException(message: e.toString());
     }

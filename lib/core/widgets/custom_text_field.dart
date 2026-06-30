@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomTextField extends StatelessWidget {
   final String label;
-  final String hintText;
+  final String? hintText;
   final Widget? prefix;
   final Widget? suffix;
   final bool obscureText;
@@ -15,7 +15,7 @@ class CustomTextField extends StatelessWidget {
   const CustomTextField({
     super.key,
     required this.label,
-    required this.hintText,
+    this.hintText,
     this.suffix,
     this.validator,
     this.textAlign,

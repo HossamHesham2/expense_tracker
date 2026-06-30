@@ -1,21 +1,42 @@
+import 'package:expense_tracker/core/constants/routes_name.dart';
 import 'package:expense_tracker/core/constants/svgs_name.dart';
 import 'package:expense_tracker/core/extensions/text_extension.dart';
 import 'package:expense_tracker/core/models/transaction_model.dart';
 import 'package:expense_tracker/core/utils/app_colors.dart';
+import 'package:expense_tracker/features/transactions/presentation/bloc/transactions_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
-class TransactionDetailsScreen extends StatelessWidget {
+class TransactionDetailsScreen extends StatefulWidget {
   const TransactionDetailsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final TransactionModel transaction =
-        ModalRoute.of(context)!.settings.arguments as TransactionModel;
+  State<TransactionDetailsScreen> createState() =>
+      _TransactionDetailsScreenState();
+}
 
-    final bool isExpense = transaction.transactionType == TransactionType.expense;
+class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
+  late TransactionModel transaction;
+  bool _initialized = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (_initialized) return;
+    _initialized = true;
+
+    transaction =
+        ModalRoute.of(context)!.settings.arguments as TransactionModel;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isExpense =
+        transaction.transactionType == TransactionType.expense;
     final Color amountColor = isExpense
         ? AppColors.redEF44
         : AppColors.green16A3;
@@ -105,7 +126,7 @@ class TransactionDetailsScreen extends StatelessWidget {
 
                     // Amount
                     Text(
-                      '${isExpense ? '-' : '+'} ${transaction.amount?.toStringAsFixed(2) ?? '0.00' } EG',
+                      '${isExpense ? '-' : '+'} ${transaction.amount?.toStringAsFixed(2) ?? '0.00'} EG',
                       style: context.headlineLarge.copyWith(
                         fontSize: 25.sp,
                         fontWeight: FontWeight.bold,
@@ -155,10 +176,13 @@ class TransactionDetailsScreen extends StatelessWidget {
                 value: transaction.category ?? '',
                 valueColor: isExpense ? AppColors.redEF44 : AppColors.green16A3,
               ),
-              _DetailRow(label: 'Date', value: DateFormat('dd MMM yyyy').format(transaction.date!)),
+              _DetailRow(
+                label: 'Date',
+                value: DateFormat('dd MMM yyyy').format(transaction.date!),
+              ),
               _DetailRow(
                 label: 'Time',
-                value: DateFormat('hh:mm a').format(transaction.date!) ,
+                value: DateFormat('hh:mm a').format(transaction.date!),
               ),
               _DetailRow(
                 label: 'Account',
@@ -167,7 +191,6 @@ class TransactionDetailsScreen extends StatelessWidget {
               ),
 
               SizedBox(height: 20.h),
-
 
               Text(
                 'Note',
@@ -192,7 +215,23 @@ class TransactionDetailsScreen extends StatelessWidget {
                     // Edit
                     Expanded(
                       child: OutlinedButton.icon(
-                        onPressed: () {},
+                        onPressed: () async {
+                          final result = await Navigator.pushNamed(
+                            context,
+                            RoutesName.editTransaction,
+                            arguments: transaction,
+                          );
+
+                          if (result is TransactionModel && mounted) {
+                            setState(() {
+                              transaction = result;
+                            });
+
+                            context.read<TransactionsBloc>().add(
+                              const GetAllTransactionsEvent(),
+                            );
+                          }
+                        },
                         icon: SvgPicture.asset(
                           SvgsName.pencil,
                           width: 18.w,

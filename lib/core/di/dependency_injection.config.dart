@@ -36,14 +36,16 @@ import '../../features/auth/domain/usecases/login_with_google_use_case.dart'
 import '../../features/auth/domain/usecases/logout_use_case.dart' as _i711;
 import '../../features/auth/domain/usecases/register_use_case.dart' as _i97;
 import '../../features/auth/presentation/bloc/auth_bloc.dart' as _i797;
+import '../../features/transactions/data/repository/transactions_repo_impl.dart'
+    as _i310;
 import '../../features/transactions/data/request/transactions_remote.dart'
     as _i867;
 import '../../features/transactions/data/request/transactions_remote_impl.dart'
     as _i462;
 import '../../features/transactions/domain/repository/transactions_repo.dart'
     as _i9;
-import '../../features/transactions/domain/repository/transactions_repo_impl.dart'
-    as _i954;
+import '../../features/transactions/domain/usecases/edit_transaction_use_case.dart'
+    as _i26;
 import '../../features/transactions/domain/usecases/get_all_transactions_use_case.dart'
     as _i980;
 import '../../features/transactions/presentation/bloc/transactions_bloc.dart'
@@ -95,11 +97,6 @@ extension GetItInjectableX on _i174.GetIt {
         firebaseFirestore: gh<_i974.FirebaseFirestore>(),
       ),
     );
-    gh.factory<_i9.TransactionsRepo>(
-      () => _i954.TransactionsRepoImpl(
-        transactionsRemote: gh<_i867.TransactionsRemote>(),
-      ),
-    );
     gh.factory<_i140.AddTransactionRepo>(
       () => _i709.AddTransactionRepoImpl(
         addTransactionRemote: gh<_i42.AddTransactionRemote>(),
@@ -118,9 +115,19 @@ extension GetItInjectableX on _i174.GetIt {
         logoutUseCase: gh<_i711.LogoutUseCase>(),
       ),
     );
+    gh.factory<_i9.TransactionsRepo>(
+      () => _i310.TransactionsRepoImpl(
+        transactionsRemote: gh<_i867.TransactionsRemote>(),
+      ),
+    );
     gh.factory<_i828.AddTransactionBloc>(
       () => _i828.AddTransactionBloc(
         addTransactionUseCase: gh<_i273.AddTransactionUseCase>(),
+      ),
+    );
+    gh.factory<_i26.EditTransactionUseCase>(
+      () => _i26.EditTransactionUseCase(
+        transactionsRepo: gh<_i9.TransactionsRepo>(),
       ),
     );
     gh.factory<_i980.GetAllTransactionsUseCase>(
@@ -131,6 +138,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i439.TransactionsBloc>(
       () => _i439.TransactionsBloc(
         getAllTransactionsUseCase: gh<_i980.GetAllTransactionsUseCase>(),
+        editTransactionUseCase: gh<_i26.EditTransactionUseCase>(),
       ),
     );
     return this;
