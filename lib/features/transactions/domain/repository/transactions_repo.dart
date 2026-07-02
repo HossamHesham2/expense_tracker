@@ -15,4 +15,6 @@ abstract class TransactionsRepo {
     required DateTime date,
     required String? note,
   });
+
+  Future<Either<Failure, bool>> deleteTransaction({required String id});
 }

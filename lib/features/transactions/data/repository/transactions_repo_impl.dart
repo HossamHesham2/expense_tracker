@@ -48,4 +48,14 @@ class TransactionsRepoImpl extends TransactionsRepo {
       throw Left(ServerFailure(errMessage: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, bool>> deleteTransaction({required String id}) async {
+    try {
+      final result = await transactionsRemote.deleteTransaction(id: id);
+      return Right(result);
+    } catch (e) {
+      throw Left(ServerFailure(errMessage: e.toString()));
+    }
+  }
 }

@@ -7,6 +7,9 @@ class TransactionsState extends Equatable {
   final Failure? transactionsFailure;
   final Failure? editTransactionsFailure;
 
+  final TransactionsRequest? deleteTransactionsRequest;
+  final Failure? deleteTransactionsFailure;
+
   final TransactionModel? transactionModel;
   final List<TransactionModel> transactions;
 
@@ -17,6 +20,8 @@ class TransactionsState extends Equatable {
     required this.editTransactionsFailure,
     required this.transactionModel,
     required this.transactions,
+    required this.deleteTransactionsRequest,
+    required this.deleteTransactionsFailure,
   });
 
   factory TransactionsState.initial() {
@@ -27,6 +32,8 @@ class TransactionsState extends Equatable {
       transactions: const [],
       editTransactionsFailure: null,
       editTransactionsRequest: TransactionsRequest.init,
+      deleteTransactionsFailure: null,
+      deleteTransactionsRequest: TransactionsRequest.init,
     );
   }
 
@@ -36,7 +43,9 @@ class TransactionsState extends Equatable {
     List<TransactionModel>? transactions,
     TransactionModel? transactionModel,
     TransactionsRequest? editTransactionsRequest,
+    TransactionsRequest? deleteTransactionsRequest,
     Failure? editTransactionsFailure,
+    Failure? deleteTransactionsFailure,
   }) {
     return TransactionsState(
       transactionsRequest: transactionsRequest ?? this.transactionsRequest,
@@ -47,6 +56,10 @@ class TransactionsState extends Equatable {
           editTransactionsFailure ?? this.editTransactionsFailure,
       transactions: transactions ?? this.transactions,
       transactionModel: transactionModel ?? this.transactionModel,
+      deleteTransactionsRequest:
+          deleteTransactionsRequest ?? this.deleteTransactionsRequest,
+      deleteTransactionsFailure:
+          deleteTransactionsFailure ?? this.deleteTransactionsFailure,
     );
   }
 
@@ -58,6 +71,8 @@ class TransactionsState extends Equatable {
     transactions,
     editTransactionsRequest,
     editTransactionsFailure,
+    deleteTransactionsRequest,
+    deleteTransactionsFailure,
   ];
 }
 

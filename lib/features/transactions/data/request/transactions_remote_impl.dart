@@ -92,4 +92,31 @@ class TransactionsRemoteImpl extends TransactionsRemote {
       throw RemoteException(message: e.toString());
     }
   }
+
+  @override
+  Future<bool> deleteTransaction({required String id}) async {
+    try {
+      final user = firebaseAuth.currentUser;
+
+      if (user == null) {
+        throw RemoteException(message: 'User not authenticated');
+      }
+
+      final userId = user.uid;
+
+      final docRef = firebaseFirestore
+          .collection(AppConstant.usersCollection)
+          .doc(userId)
+          .collection(AppConstant.transactionsCollection)
+          .doc(id);
+      print("Delete User: $userId");
+      print("Delete Doc: $id");
+
+      await docRef.delete();
+
+      return true;
+    } catch (e) {
+      throw RemoteException(message: e.toString());
+    }
+  }
 }

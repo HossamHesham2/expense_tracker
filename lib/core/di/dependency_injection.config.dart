@@ -44,6 +44,8 @@ import '../../features/transactions/data/request/transactions_remote_impl.dart'
     as _i462;
 import '../../features/transactions/domain/repository/transactions_repo.dart'
     as _i9;
+import '../../features/transactions/domain/usecases/delete_transaction_use_case.dart'
+    as _i84;
 import '../../features/transactions/domain/usecases/edit_transaction_use_case.dart'
     as _i26;
 import '../../features/transactions/domain/usecases/get_all_transactions_use_case.dart'
@@ -125,6 +127,11 @@ extension GetItInjectableX on _i174.GetIt {
         addTransactionUseCase: gh<_i273.AddTransactionUseCase>(),
       ),
     );
+    gh.factory<_i84.DeleteTransactionUseCase>(
+      () => _i84.DeleteTransactionUseCase(
+        transactionsRepo: gh<_i9.TransactionsRepo>(),
+      ),
+    );
     gh.factory<_i26.EditTransactionUseCase>(
       () => _i26.EditTransactionUseCase(
         transactionsRepo: gh<_i9.TransactionsRepo>(),
@@ -139,6 +146,7 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i439.TransactionsBloc(
         getAllTransactionsUseCase: gh<_i980.GetAllTransactionsUseCase>(),
         editTransactionUseCase: gh<_i26.EditTransactionUseCase>(),
+        deleteTransactionUseCase: gh<_i84.DeleteTransactionUseCase>(),
       ),
     );
     return this;

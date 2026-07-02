@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/models/transaction_model.dart';
 
 abstract class TransactionsRemote {
   Future<List<TransactionModel>> getAllTransactions();
+
   Future<TransactionModel> editTransaction({
     required String id,
     required String title,
@@ -12,4 +13,6 @@ abstract class TransactionsRemote {
     required DateTime date,
     required String? note,
   });
+
+  Future<bool> deleteTransaction({required String id});
 }

@@ -44,3 +44,12 @@ class EditTransactionEvent extends TransactionsEvent {
     note,
   ];
 }
+
+class DeleteTransactionEvent extends TransactionsEvent {
+  final String id;
+
+  const DeleteTransactionEvent({required this.id});
+
+  @override
+  List<Object?> get props => [id];
+}
