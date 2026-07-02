@@ -8,6 +8,7 @@ import 'package:expense_tracker/features/transactions/domain/usecases/get_all_tr
 import 'package:injectable/injectable.dart';
 
 part 'transactions_event.dart';
+
 part 'transactions_state.dart';
 
 @injectable
@@ -27,29 +28,23 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
   }
 
   Future<void> _onGetAllTransactions(
-      GetAllTransactionsEvent event,
-      Emitter<TransactionsState> emit,
-      ) async {
-    emit(
-      state.copyWith(
-        transactionsRequest: TransactionsRequest.loading,
-      ),
-    );
+    GetAllTransactionsEvent event,
+    Emitter<TransactionsState> emit,
+  ) async {
+    emit(state.copyWith(transactionsRequest: TransactionsRequest.loading));
 
     final res = await getAllTransactionsUseCase.call();
-
+    await Future.delayed(const Duration(milliseconds: 1500));
     res.fold(
-          (l) {
+      (l) {
         emit(
           state.copyWith(
             transactionsRequest: TransactionsRequest.error,
-            transactionsFailure: ServerFailure(
-              errMessage: l.errMessage,
-            ),
+            transactionsFailure: ServerFailure(errMessage: l.errMessage),
           ),
         );
       },
-          (transactions) {
+      (transactions) {
         emit(
           state.copyWith(
             transactionsRequest: TransactionsRequest.success,
@@ -61,14 +56,10 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
   }
 
   Future<void> _onEditTransaction(
-      EditTransactionEvent event,
-      Emitter<TransactionsState> emit,
-      ) async {
-    emit(
-      state.copyWith(
-        editTransactionsRequest: TransactionsRequest.loading,
-      ),
-    );
+    EditTransactionEvent event,
+    Emitter<TransactionsState> emit,
+  ) async {
+    emit(state.copyWith(editTransactionsRequest: TransactionsRequest.loading));
 
     final res = await editTransactionUseCase.call(
       id: event.id,
@@ -82,17 +73,15 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
     );
 
     res.fold(
-          (l) {
+      (l) {
         emit(
           state.copyWith(
             editTransactionsRequest: TransactionsRequest.error,
-            editTransactionsFailure: ServerFailure(
-              errMessage: l.errMessage,
-            ),
+            editTransactionsFailure: ServerFailure(errMessage: l.errMessage),
           ),
         );
       },
-          (transaction) {
+      (transaction) {
         emit(
           state.copyWith(
             editTransactionsRequest: TransactionsRequest.success,
@@ -106,31 +95,25 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
   }
 
   Future<void> _onDeleteTransaction(
-      DeleteTransactionEvent event,
-      Emitter<TransactionsState> emit,
-      ) async {
+    DeleteTransactionEvent event,
+    Emitter<TransactionsState> emit,
+  ) async {
     emit(
-      state.copyWith(
-        deleteTransactionsRequest: TransactionsRequest.loading,
-      ),
+      state.copyWith(deleteTransactionsRequest: TransactionsRequest.loading),
     );
 
     final res = await deleteTransactionUseCase.call(id: event.id);
 
     res.fold(
-          (l) {
+      (l) {
         emit(
           state.copyWith(
             deleteTransactionsRequest: TransactionsRequest.error,
-            deleteTransactionsFailure: ServerFailure(
-              errMessage: l.errMessage,
-            ),
+            deleteTransactionsFailure: ServerFailure(errMessage: l.errMessage),
           ),
         );
       },
-          (_) {
-
-
+      (_) {
         final updatedTransactions = List<TransactionModel>.from(
           state.transactions,
         )..removeWhere((e) => e.id == event.id);

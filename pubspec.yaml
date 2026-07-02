@@ -52,6 +52,7 @@ dependencies:
   awesome_snackbar_content: ^0.1.8
   uuid: ^4.5.1
   icons_launcher: ^3.1.0
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:

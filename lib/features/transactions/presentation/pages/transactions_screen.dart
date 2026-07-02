@@ -3,13 +3,16 @@ import 'package:expense_tracker/core/constants/svgs_name.dart';
 import 'package:expense_tracker/core/extensions/text_extension.dart';
 import 'package:expense_tracker/core/models/transaction_model.dart';
 import 'package:expense_tracker/core/utils/app_colors.dart';
+import 'package:expense_tracker/core/widgets/custom_filter_chip.dart';
 import 'package:expense_tracker/core/widgets/transaction_card.dart';
+import 'package:expense_tracker/core/widgets/transaction_card_shimmer.dart';
 import 'package:expense_tracker/features/transactions/presentation/bloc/transactions_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 
 class TransactionsScreen extends StatefulWidget {
   const TransactionsScreen({super.key});
@@ -33,14 +36,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<TransactionsBloc, TransactionsState>(
       builder: (context, state) {
-        if (state.transactionsRequest == TransactionsRequest.loading) {
-          return Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(color: AppColors.green16A3),
-            ),
-          );
-        }
-
         if (state.transactionsRequest == TransactionsRequest.error) {
           return Scaffold(
             body: Center(
@@ -66,11 +61,24 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
                 SizedBox(height: 20.h),
 
-                Expanded(
-                  child: transactions.isEmpty
-                      ? const Center(child: Text("No Transactions"))
-                      : _buildTransactionsList(transactions),
-                ),
+                state.transactionsRequest == TransactionsRequest.loading
+                    ? Expanded(
+                  child: Shimmer.fromColors(
+                    baseColor: Colors.grey.shade300,
+                    highlightColor: Colors.grey.shade100,
+                    child: ListView.separated(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      itemCount: 6,
+                      separatorBuilder: (_, __) => SizedBox(height: 12.h),
+                      itemBuilder: (_, __) => const TransactionCardShimmer(),
+                    ),
+                  ),
+                )
+                    : Expanded(
+                        child: transactions.isEmpty
+                            ? const Center(child: Text("No Transactions"))
+                            : _buildTransactionsList(transactions),
+                      ),
               ],
             ),
           ),
@@ -96,7 +104,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 child: SvgPicture.asset(SvgsName.searchSharp),
               ),
               SizedBox(width: 20.w),
-              GestureDetector(onTap: () {}, child: SvgPicture.asset(SvgsName.filter)),
+              GestureDetector(
+                onTap: () {},
+                child: SvgPicture.asset(SvgsName.filter),
+              ),
             ],
           ),
         ],
@@ -110,7 +121,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _FilterChip(
+          CustomFilterChip(
             label: "All",
             selected: selectedFilter == FilterType.all,
             onTap: () {
@@ -121,7 +132,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             color: Colors.black,
           ),
           SizedBox(width: 10.w),
-          _FilterChip(
+          CustomFilterChip(
             label: "Income",
             selected: selectedFilter == FilterType.income,
             onTap: () {
@@ -132,7 +143,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             color: AppColors.green16A3,
           ),
           SizedBox(width: 10.w),
-          _FilterChip(
+          CustomFilterChip(
             label: "Expense",
             selected: selectedFilter == FilterType.expense,
             onTap: () {
@@ -250,52 +261,17 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               date: transaction.date,
               type: transaction.transactionType,
               svgIcon: svgName(transaction.category ?? ""),
-              onTap: () => Navigator.pushNamed(context, RoutesName.transactionDetails,arguments: transaction),
-
+              onTap: () => Navigator.pushNamed(
+                context,
+                RoutesName.transactionDetails,
+                arguments: transaction,
+              ),
             ),
 
             SizedBox(height: 12.h),
           ],
         );
       },
-    );
-  }
-}
-
-class _FilterChip extends StatelessWidget {
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-  final Color color;
-
-  const _FilterChip({
-    required this.label,
-    required this.selected,
-    required this.onTap,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
-        decoration: BoxDecoration(
-          color: selected ? color : Colors.white,
-          borderRadius: BorderRadius.circular(20.r),
-          border: Border.all(color: selected ? color : Colors.grey.shade300),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w600,
-            color: selected ? Colors.white : Colors.black87,
-          ),
-        ),
-      ),
     );
   }
 }

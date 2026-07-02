@@ -164,34 +164,39 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                     SizedBox(height: 20.h),
-                    if (state.transactions.isEmpty)
-                      Center(
-                        child: Text("No data fount", style: context.titleLarge),
-                      )
-                    else
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: state.transactions.length > 5
-                            ? 5
-                            : state.transactions.length,
-                        itemBuilder: (context, index) {
-                          final transaction = state.transactions[index];
-                          return TransactionCard(
-                            title: transaction.title,
-                            category: transaction.category,
-                            amount: transaction.amount,
-                            date: transaction.date,
-                            type: transaction.transactionType,
-                            svgIcon: svgName(transaction.category ?? ""),
-                            onTap: () => Navigator.pushNamed(
-                              context,
-                              RoutesName.transactionDetails,
-                              arguments: transaction,
+                    state.transactions.isEmpty
+                        ? SizedBox(
+                            height: 200.h,
+                            child: Center(
+                              child: Text(
+                                "No data fount",
+                                style: context.titleLarge,
+                              ),
                             ),
-                          );
-                        },
-                      ),
+                          )
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: state.transactions.length > 5
+                                ? 5
+                                : state.transactions.length,
+                            itemBuilder: (context, index) {
+                              final transaction = state.transactions[index];
+                              return TransactionCard(
+                                title: transaction.title,
+                                category: transaction.category,
+                                amount: transaction.amount,
+                                date: transaction.date,
+                                type: transaction.transactionType,
+                                svgIcon: svgName(transaction.category ?? ""),
+                                onTap: () => Navigator.pushNamed(
+                                  context,
+                                  RoutesName.transactionDetails,
+                                  arguments: transaction,
+                                ),
+                              );
+                            },
+                          ),
                   ],
                 ),
               ),
