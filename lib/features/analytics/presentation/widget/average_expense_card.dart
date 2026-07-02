@@ -22,7 +22,7 @@ class AverageExpenseCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -80,8 +80,8 @@ class AverageExpenseCard extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   color: isPositive
-                      ? Colors.green.withOpacity(0.15)
-                      : Colors.red.withOpacity(0.15),
+                      ? Colors.green.withValues(alpha: 0.15)
+                      : Colors.red.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(20.r),
                 ),
                 child: Text(

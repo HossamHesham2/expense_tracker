@@ -7,7 +7,7 @@ class CustomFilterChip extends StatelessWidget {
   final VoidCallback onTap;
   final Color color;
 
-  const CustomFilterChip({
+  const CustomFilterChip({super.key, 
     required this.label,
     required this.selected,
     required this.onTap,

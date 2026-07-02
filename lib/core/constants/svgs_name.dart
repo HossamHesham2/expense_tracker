@@ -42,4 +42,8 @@ class SvgsName {
   static const String user = "assets/svgs/user.svg";
   static const String users = "assets/svgs/users.svg";
   static const String google = "assets/svgs/google.svg";
+  static const String linkedin = "assets/svgs/linkedin.svg";
+  static const String twitter = "assets/svgs/twitter.svg";
+  static const String instagram = "assets/svgs/instagram.svg";
+  static const String facebook = "assets/svgs/facebook.svg";
 }

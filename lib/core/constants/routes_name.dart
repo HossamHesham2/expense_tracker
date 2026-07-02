@@ -10,4 +10,12 @@ class RoutesName {
   static const String profile = '/profile';
   static const String addExpense = '/add-expense';
   static const String mainLayout = '/mainLayout';
+  static const String aboutUs = '/aboutUs';
+  static const String helpSupport = '/helpSupport';
+  static const String security = '/security';
+  static const String notifications = '/notifications';
+  static const String budget = '/budget';
+  static const String categories = '/categories';
+  static const String accounts = '/accounts';
+  static const String personalInformation = '/personalInformation';
 }

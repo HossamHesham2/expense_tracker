@@ -189,9 +189,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 physics: const NeverScrollableScrollPhysics(),
                                 padding: EdgeInsets.symmetric(horizontal: 0.w),
                                 itemCount: 5,
-                                separatorBuilder: (_, __) =>
+                                separatorBuilder: (_, _) =>
                                     SizedBox(height: 12.h),
-                                itemBuilder: (_, __) =>
+                                itemBuilder: (_, _) =>
                                     const TransactionCardShimmer(),
                               ),
                             ),

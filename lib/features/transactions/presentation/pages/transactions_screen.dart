@@ -69,8 +69,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     child: ListView.separated(
                       padding: EdgeInsets.symmetric(horizontal: 20.w),
                       itemCount: 6,
-                      separatorBuilder: (_, __) => SizedBox(height: 12.h),
-                      itemBuilder: (_, __) => const TransactionCardShimmer(),
+                      separatorBuilder: (_, _) => SizedBox(height: 12.h),
+                      itemBuilder: (_, _) => const TransactionCardShimmer(),
                     ),
                   ),
                 )

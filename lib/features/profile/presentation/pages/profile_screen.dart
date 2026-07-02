@@ -125,7 +125,9 @@ class ProfileScreen extends StatelessWidget {
                   profileCard(
                     context: context,
                     imageName: SvgsName.info,
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushNamed(context, RoutesName.aboutUs);
+                    },
                     title: "About Us",
                   ),
                   SizedBox(height: 20.h),
