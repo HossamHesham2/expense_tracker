@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/extensions/text_extension.dart';
 import 'package:expense_tracker/core/models/transaction_model.dart';
 import 'package:expense_tracker/core/utils/app_colors.dart';
 import 'package:expense_tracker/core/widgets/transaction_card.dart';
+import 'package:expense_tracker/core/widgets/transaction_card_shimmer.dart';
 import 'package:expense_tracker/features/home/presentation/widget/balance_card.dart';
 import 'package:expense_tracker/features/transactions/presentation/bloc/transactions_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -171,6 +173,26 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Text(
                                 "No data fount",
                                 style: context.titleLarge,
+                              ),
+                            ),
+                          )
+                        : state.transactionsRequest ==
+                              TransactionsRequest.loading
+                        ? SizedBox(
+                            height: 400.h,
+
+                            child: Shimmer.fromColors(
+                              baseColor: Colors.grey.shade300,
+                              highlightColor: Colors.grey.shade100,
+                              child: ListView.separated(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                padding: EdgeInsets.symmetric(horizontal: 0.w),
+                                itemCount: 5,
+                                separatorBuilder: (_, __) =>
+                                    SizedBox(height: 12.h),
+                                itemBuilder: (_, __) =>
+                                    const TransactionCardShimmer(),
                               ),
                             ),
                           )
